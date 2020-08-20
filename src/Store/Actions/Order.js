@@ -44,7 +44,6 @@ export const purchaseInit = () => {
 }
 
 export const fetchOrdersStart = (token) => {
-    console.log(token);
     return{
         type: actionTypes.FETCH_ORDERS_START
     }
@@ -62,20 +61,58 @@ export const fetchOrdersSuccess = (orders) => {
     }
 }
 
+export const deleteOrderStart = () => {
+    return{
+        type: actionTypes.DELETE_ORDER_START
+    }
+}
+export const deleteOrderFail = (error) => {
+    return{
+        type: actionTypes.DELETE_ORDER_FAIL,
+        error: error
+    }
+}
+
+
+export const fetchPriceSuccess = (totalPrice) => {
+    return{
+        type: actionTypes.FETCH_PRICE_SUCCESS,
+        price: totalPrice
+    }
+}
+
+export const deleteOrders = (id,token,userId) => {
+    return dispatch => {
+        dispatch(deleteOrderStart());
+        axios.delete( "/orders/" + id +".json?auth=" + token)
+            .then( response => {
+                dispatch(fetchOrders(token,userId))
+                } )
+            .catch( error => {
+                dispatch(deleteOrderFail( error ) );
+            } );
+    };
+};
+
 export const fetchOrders = (token, userId) => {
     return dispatch => {
         dispatch(fetchOrdersStart());
-        const queryParams = '?auth=' + token + '&orderBy="userId"&equalTo"' + userId + '"';
+        const queryParams = '?auth=' + token + '&orderBy="userId"&equalTo="' + userId + '"';
         axios.get( '/orders.json' + queryParams)
             .then( res => {
+                let totalPrice=null
                 const fetchedOrders = [];
                 for ( let key in res.data ) {
+                    totalPrice=totalPrice+res.data[key].price
                     fetchedOrders.push( {
                         ...res.data[key],
                         id: key
                     } );
                 }
+                
+                dispatch(fetchPriceSuccess(totalPrice))
                 dispatch(fetchOrdersSuccess(fetchedOrders));
+
             } )
             .catch( err => {
                 dispatch(fetchOrdersFail(err));

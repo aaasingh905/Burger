@@ -3,6 +3,19 @@
     border: 1px solid #eee;
     box-shadow: 0 2px 3px #ccc;
     padding: 10px;
-    margin: 30px auto;
+    margin: 10px auto;
     box-sizing: border-box;
+}
+    
+.buttondiv {
+    text-align: right;
+    
+}
+.button {
+        background:rgba(204, 14, 14, 0.918);
+        font-size: 22px;
+        font-weight: bold;
+        color: white ;
+        text-align: right;
+        justify-content: flex-end;
 }

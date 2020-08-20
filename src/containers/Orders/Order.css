@@ -1,3 +1,19 @@
 .Orders {
     margin-top: 80px;
 }
+
+.PriceDiv {
+    font-size: 20px;
+    font-weight: bold;
+    text-align: right;
+    margin-right: 70px;
+    margin-top: 25px;
+}
+
+.Empty {
+    font-size: 20px;
+    font-weight: bold;
+    text-align: center;
+    margin-right: 70px;
+    margin-top: 25px;
+}

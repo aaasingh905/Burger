@@ -12,8 +12,10 @@ class Orders extends Component {
     componentDidMount() {
         this.props.onFetchOrders(this.props.token, this.props.userId);
    }
-
+   
+ 
     render () {
+     
         let orders = <Spinner />;
         if( !this.props.loading ) {
             orders= 
@@ -21,14 +23,22 @@ class Orders extends Component {
                 <Order 
                     key={order.id}
                     ingredients={order.ingredients}
-                    price={order.price} />
+                    userDetails={order.orderData}
+                    price={order.price}
+                   clicked={() => this.props.onDeleteOrders(order.id,this.props.token,this.props.userId)}
+                    />
                 ))
             
             }
+            let price=<div className={classes.Empty}>Your cart is empty !! Start Ordering :) {this.props.totalPrice}</div> 
+        if(this.props.totalPrice!==null)   {
+            price = <div className={classes.PriceDiv}>Total Price: Rs {this.props.totalPrice}</div> 
+        } 
          
         return  (
         <div className={classes.Orders}> 
-            {orders}
+        {orders}
+        {price}   
         </div>
         );
         
@@ -41,12 +51,14 @@ const mapStateToProps = state => {
         orders: state.order.orders,
         loading: state.order.loading,
         token: state.auth.token,
-        userId: state.auth.userId
+        userId: state.auth.userId,
+        totalPrice: state.order.totalPrice
     }
 };
 const mapDispatchToProps = dispatch => {
     return {
-        onFetchOrders: (token,userId) => dispatch(actions.fetchOrders(token,userId))
+        onFetchOrders: (token,userId) => dispatch(actions.fetchOrders(token,userId)),
+        onDeleteOrders: (id,token,userId) => dispatch(actions.deleteOrders(id,token,userId))
     }
 };
 export default connect(mapStateToProps, mapDispatchToProps)(withErrorHandler(Orders, axios));
